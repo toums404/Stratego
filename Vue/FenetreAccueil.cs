@@ -20,7 +20,7 @@ namespace Stratego_TT_25_26
 
         private void bNouvellePartie_Click(object sender, EventArgs e)
         {
-            FenetreJeu fenetreJeu= new FenetreJeu();
+            FenetreJeu fenetreJeu= new FenetreJeu("", checkBoxManuel.Checked);
             fenetreJeu.Show();
             this.Hide();
         }

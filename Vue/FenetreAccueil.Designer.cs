@@ -32,15 +32,17 @@
             this.bNouvellePartie = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.checkBoxManuel = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // bNouvellePartie
             // 
+            this.bNouvellePartie.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.bNouvellePartie.BackColor = System.Drawing.Color.Blue;
             this.bNouvellePartie.FlatAppearance.BorderSize = 0;
             this.bNouvellePartie.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bNouvellePartie.Font = new System.Drawing.Font("Orbitron", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bNouvellePartie.Location = new System.Drawing.Point(487, 257);
+            this.bNouvellePartie.Location = new System.Drawing.Point(459, 276);
             this.bNouvellePartie.Name = "bNouvellePartie";
             this.bNouvellePartie.Size = new System.Drawing.Size(258, 136);
             this.bNouvellePartie.TabIndex = 0;
@@ -50,11 +52,12 @@
             // 
             // button1
             // 
+            this.button1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.button1.BackColor = System.Drawing.Color.Lime;
             this.button1.FlatAppearance.BorderSize = 0;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.Font = new System.Drawing.Font("Orbitron", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(487, 434);
+            this.button1.Location = new System.Drawing.Point(459, 456);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(258, 136);
             this.button1.TabIndex = 1;
@@ -64,20 +67,38 @@
             // 
             // label1
             // 
+            this.label1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Orbitron", 48F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(350, 114);
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.Font = new System.Drawing.Font("Blacklisted", 48F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(342, 81);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(557, 115);
+            this.label1.Size = new System.Drawing.Size(506, 133);
             this.label1.TabIndex = 2;
             this.label1.Text = "Stratego ";
+            // 
+            // checkBoxManuel
+            // 
+            this.checkBoxManuel.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.checkBoxManuel.AutoSize = true;
+            this.checkBoxManuel.BackColor = System.Drawing.Color.Transparent;
+            this.checkBoxManuel.Font = new System.Drawing.Font("Doctor Glitch", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBoxManuel.Location = new System.Drawing.Point(335, 241);
+            this.checkBoxManuel.Name = "checkBoxManuel";
+            this.checkBoxManuel.Size = new System.Drawing.Size(502, 29);
+            this.checkBoxManuel.TabIndex = 3;
+            this.checkBoxManuel.Text = "Placement manuel des troupes";
+            this.checkBoxManuel.UseVisualStyleBackColor = false;
             // 
             // FenetreAccueil
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1220, 765);
+            this.Controls.Add(this.checkBoxManuel);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.bNouvellePartie);
@@ -86,6 +107,7 @@
             this.Name = "FenetreAccueil";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Stratego -- Accueil";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -96,6 +118,7 @@
         private System.Windows.Forms.Button bNouvellePartie;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox checkBoxManuel;
     }
 }
 

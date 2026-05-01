@@ -16,13 +16,17 @@ namespace Stratego_TT_25_26.Vue
         private Manager jeu;
         private Button[,] boutonsGrille;
         private Point? caseSelectionnee = null;//? pour permettre null et Point
-        public FenetreJeu(string cheminSauvegarde = "")
+        public FenetreJeu(string cheminSauvegarde = "", bool placementManuel = false)
         {
             InitializeComponent();
             jeu = new Manager();
             if (!string.IsNullOrEmpty(cheminSauvegarde) && System.IO.File.Exists(cheminSauvegarde))
             {
                 jeu.ChargerPartie(cheminSauvegarde);
+            }
+            else if (placementManuel)
+            {
+                jeu.InitialiserPartieManuelle();
             }
             else
             {
@@ -32,6 +36,7 @@ namespace Stratego_TT_25_26.Vue
             boutonsGrille = new Button[Plateau.TAILLE, Plateau.TAILLE];
             GenererBoutons();
             MajAffichage();
+            MajInventaire();
         }
         private void BoutonGrille_Click(object sender, EventArgs e)
         {
@@ -41,7 +46,56 @@ namespace Stratego_TT_25_26.Vue
             int xClick = coordonnes.X;
             int yClick = coordonnes.Y;
 
-            if(caseSelectionnee == null)
+            if(jeu.EtatActuel == EtatJeu.Placement)
+            {
+                if (listBoxPieces.SelectedIndex != -1)
+                {
+                    Grade gradeChoisi = (Grade)listBoxPieces.SelectedItem;
+
+                    Piece pieceAPlacer = null;
+                    foreach (Piece p in jeu.PiecesEnAttente)
+                    {
+                        if (p.GradePiece == gradeChoisi)
+                        {
+                            pieceAPlacer = p;
+                            break;
+                        }
+                    }
+                    Equipe ancienJoueur = jeu.JoueurCourant;
+                    bool placementReussi = jeu.PlacerPieceManuelle(xClick, yClick, pieceAPlacer);
+                    if (placementReussi)
+                    {
+                        MajAffichage();
+                        MajInventaire();
+                        if (ancienJoueur == Equipe.Rouge && jeu.JoueurCourant == Equipe.Bleu)
+                        {
+                            labelTransition.Text = "Placement terminé pour ROUGE !\nAu tour du joueur BLEU de placer ses pièces.";
+                            labelTransition.ForeColor = Color.CornflowerBlue;
+                            panelTransition.Visible = true;
+                            panelTransition.BringToFront();
+                        }
+                        else if (ancienJoueur == Equipe.Bleu && jeu.EtatActuel == EtatJeu.EnJeu)
+                        {
+                            labelTransition.Text = "La phase de préparation est terminée !\nLa partie commence, c'est au joueur ROUGE.";
+                            labelTransition.ForeColor = Color.Tomato;
+                            panelTransition.Visible = true;
+                            panelTransition.BringToFront();
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Placement impossible !\nRappel : Lignes 0-1 pour l'équipe Rouge, Lignes 6-7 pour l'équipe Bleue.\nLa case doit également être vide.", "Mouvement invalide", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Veuillez d'abord sélectionner une pièce dans la liste à droite avant de cliquer sur la grille !", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                return;
+            }
+
+
+            if (caseSelectionnee == null)
             {
                 Piece piece = jeu.LePlateau.ObtenirPiece(xClick, yClick);
                 if (piece != null && piece.EquipePiece == jeu.JoueurCourant && piece.PeutBouger())
@@ -64,12 +118,42 @@ namespace Stratego_TT_25_26.Vue
                     MajAffichage();
                     return;
                 }
+                Piece attaquant = jeu.LePlateau.ObtenirPiece(xDepart, yDepart);
+                Piece cible = jeu.LePlateau.ObtenirPiece(xClick, yClick);
+
+                bool combat = (cible != null && cible.EquipePiece != attaquant.EquipePiece);
+                string nomAttaquant = attaquant.GradePiece.ToString();
+                string nomCible = combat ? cible.GradePiece.ToString() : "";
+
+
                 bool deplacementReussi = jeu.DeplacerPiece(xDepart, yDepart, xClick, yClick);
 
                 caseSelectionnee = null;
                 MajAffichage();
                 if (deplacementReussi && jeu.EtatActuel != EtatJeu.Termine)
                 {
+                    if (combat)
+                    {
+                        Piece gangant = jeu.LePlateau.ObtenirPiece(xClick, yClick);
+                        string rapport = $"Votre {nomAttaquant} a attaqué un(e) {nomCible} adverse !\n\n";
+                        if (gangant == null)
+                        {
+                            rapport += "Les deux pièces sont de force égale et se sont tuées mutuellement.";
+                        }
+                        else if (gangant.EquipePiece == attaquant.EquipePiece)
+                        {
+                            rapport += $"Votre {nomAttaquant} a gagné le combat et a pris la place du {nomCible} !";
+                        }
+                        else
+                        {
+                            rapport += $"Votre {nomAttaquant} a perdu le combat contre le {nomCible} adverse et a été retiré du plateau.";
+                        }
+                        MessageBox.Show(rapport, "Rapport de combat", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+
+
+
+
                     if (jeu.JoueurCourant == Equipe.Rouge)
                     {
                         labelTransition.Text = "C'est au tour du joueur ROUGE !";
@@ -94,7 +178,6 @@ namespace Stratego_TT_25_26.Vue
                 }
             }
         }
-        
         private void GenererBoutons()
         {
             //----
@@ -172,18 +255,35 @@ namespace Stratego_TT_25_26.Vue
                         {
                             button.Text = "?";
                         }
-                        button.Font = new Font("Segoe UI", 8, FontStyle.Bold);
+                        button.Font = new Font("Segoe UI", 7, FontStyle.Bold);
                         button.ForeColor = Color.White;
                     }
                 }
             }
         }
+        private void MajInventaire()
+        {
+            listBoxPieces.Items.Clear();
 
+            if (jeu.EtatActuel == EtatJeu.Placement)
+            {
+                listBoxPieces.Visible = true;
+
+                
+                foreach (Piece p in jeu.PiecesEnAttente)
+                {
+                    listBoxPieces.Items.Add(p.GradePiece);
+                }
+            }
+            else
+            {
+                listBoxPieces.Visible = false;
+            }
+        }
         private void boutonPret_Click(object sender, EventArgs e)
         {
             panelTransition.Visible = false;
         }
-
         private void btnRecommencer_Click(object sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show("Voulez-vous vraiment quitter la partie en cours ?",
@@ -203,7 +303,6 @@ namespace Stratego_TT_25_26.Vue
                 this.Close();
             }
         }
-
         private void FenetreJeu_FormClosed(object sender, FormClosedEventArgs e)
         {
             Form accueil = Application.OpenForms["FenetreAccueil"];
@@ -212,7 +311,6 @@ namespace Stratego_TT_25_26.Vue
                 Application.Exit();
             }
         }
-
         private void btnSauvegarder_Click(object sender, EventArgs e)
         {
             SaveFileDialog sfd = new SaveFileDialog();

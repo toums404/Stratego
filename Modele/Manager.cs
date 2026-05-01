@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Text.Json;
+using System.Windows.Forms;
 
 
 namespace Stratego_TT_25_26.Modele
@@ -15,6 +16,7 @@ namespace Stratego_TT_25_26.Modele
         public Equipe JoueurCourant { get; private set; }
         public EtatJeu EtatActuel { get; private set; }
         public Equipe Vainqueur { get; private set; }
+        public List<Piece> PiecesEnAttente { get; private set; } = new List<Piece>();
 
 
         public Manager()
@@ -33,8 +35,8 @@ namespace Stratego_TT_25_26.Modele
         }
         public Piece Combat(Piece Attaquant, Piece Defenseur)
         {
-            Attaquant.EstDecouverte = true;
-            Defenseur.EstDecouverte = true;
+            //Attaquant.EstDecouverte = true;
+            //Defenseur.EstDecouverte = true;
 
             if (Defenseur.GradePiece == Grade.Drapeau)
             {
@@ -82,9 +84,39 @@ namespace Stratego_TT_25_26.Modele
             int distanceX = Math.Abs(xDepart - xArrive);
             int distanceY = Math.Abs(yDepart - yArrive);
 
-            if (distanceX + distanceY != 1)
+
+            if(pieceDeplacee.GradePiece == Grade.Eclaireur) 
             {
-                return false;//pour les deplacement en croix, la somme des distances doit être égale à 1
+                if ( xDepart != xArrive && yDepart != yArrive)
+                {
+                    return false;//les eclaireurs ne peuvent pas se deplacer en diagonale
+                }
+                //boucle pour verif que il ne passe pas au dessus d'une piece
+                //ca calcule le pas de déplacement en x et y (1, -1 ou 0) en fonction de la direction du déplacement
+                //et il teste chaque case pour voir si elle est vide ou pas jusqu'à arriver à la destination
+                int pasX = (xArrive > xDepart) ? 1 : (xArrive < xDepart) ? -1 : 0;
+                int pasY = (yArrive > yDepart) ? 1 : (yArrive < yDepart) ? -1 : 0;
+
+                int testX = xDepart + pasX;
+                int testY = yDepart + pasY;
+
+                while (testX != xArrive || testY != yArrive)
+                {
+                    if (LePlateau.ObtenirPiece(testX, testY) != null)
+                    {
+                        MessageBox.Show("L'éclaireur ne peut pas sauter par dessus une pièce !", "Déplacement invalide", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return false;
+                    }
+                    testX += pasX;
+                    testY += pasY;
+                }
+            }
+            else 
+            {
+                if (distanceX + distanceY != 1)
+                {
+                    return false;//pour les deplacement en croix, la somme des distances doit être égale à 1
+                }
             }
             Piece pieceCible = LePlateau.ObtenirPiece(xArrive, yArrive);
             if (pieceCible == null)
@@ -130,6 +162,52 @@ namespace Stratego_TT_25_26.Modele
             Vainqueur = Equipe.Aucune;
             PlacerEquipeAleatoire(Equipe.Rouge, 0, 1, 0);
             PlacerEquipeAleatoire(Equipe.Bleu, 6, 7, 7);
+        }
+        public void InitialiserPartieManuelle()
+        {
+            LePlateau = new Plateau();
+            EtatActuel = EtatJeu.Placement;
+            JoueurCourant = Equipe.Rouge;
+            Vainqueur = Equipe.Aucune;
+            RemplirPiecesEnAttente(JoueurCourant);
+        }
+        private void RemplirPiecesEnAttente(Equipe equipe)
+        {
+            PiecesEnAttente.Clear();
+            PiecesEnAttente.Add(new Piece(Grade.Drapeau, equipe));
+            PiecesEnAttente.Add(new Piece(Grade.Marechal, equipe));
+            PiecesEnAttente.Add(new Piece(Grade.General, equipe));
+            PiecesEnAttente.Add(new Piece(Grade.Espion, equipe));
+
+            for (int i = 0; i < 3; i++) PiecesEnAttente.Add(new Piece(Grade.Bombe, equipe));
+            for (int i = 0; i < 3; i++) PiecesEnAttente.Add(new Piece(Grade.Demineur, equipe));
+            for (int i = 0; i < 3; i++) PiecesEnAttente.Add(new Piece(Grade.Eclaireur, equipe));
+            for (int i = 0; i < 3; i++) PiecesEnAttente.Add(new Piece(Grade.Soldat, equipe));
+        }
+        public bool PlacerPieceManuelle(int x, int y, Piece pieceAPlacer)
+        {
+            if (JoueurCourant == Equipe.Rouge && (y > 1)) return false; // rouges : lignes 0 et 1
+            if (JoueurCourant == Equipe.Bleu && (y < 6)) return false;  // bleus : lignes 6 et 7
+
+            if (LePlateau.ObtenirPiece(x, y) != null) return false;
+
+            LePlateau.PlacerPiece(x, y, pieceAPlacer);
+            PiecesEnAttente.Remove(pieceAPlacer);
+
+            if (PiecesEnAttente.Count == 0)
+            {
+                if (JoueurCourant == Equipe.Rouge)
+                {
+                    JoueurCourant = Equipe.Bleu;
+                    RemplirPiecesEnAttente(JoueurCourant);
+                }
+                else
+                {
+                    JoueurCourant = Equipe.Rouge; 
+                    EtatActuel = EtatJeu.EnJeu;
+                }
+            }
+            return true;
         }
         private void PlacerEquipeAleatoire(Equipe equipe, int ligneDebut, int ligneFin, int ligneFond)
         {
