@@ -37,6 +37,7 @@
             this.btnRecommencer = new System.Windows.Forms.Button();
             this.btnSauvegarder = new System.Windows.Forms.Button();
             this.listBoxPieces = new System.Windows.Forms.ListBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.panelTransition.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -92,13 +93,18 @@
             // boutonPret
             // 
             this.boutonPret.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.boutonPret.AutoEllipsis = true;
+            this.boutonPret.BackColor = System.Drawing.Color.DarkSlateGray;
+            this.boutonPret.FlatAppearance.BorderColor = System.Drawing.Color.Gold;
+            this.boutonPret.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.boutonPret.Font = new System.Drawing.Font("Orbitron", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.boutonPret.Location = new System.Drawing.Point(439, 760);
+            this.boutonPret.ForeColor = System.Drawing.Color.Gold;
+            this.boutonPret.Location = new System.Drawing.Point(457, 798);
             this.boutonPret.Name = "boutonPret";
             this.boutonPret.Size = new System.Drawing.Size(369, 145);
             this.boutonPret.TabIndex = 1;
             this.boutonPret.Text = "Je suis prêt !";
-            this.boutonPret.UseVisualStyleBackColor = true;
+            this.boutonPret.UseVisualStyleBackColor = false;
             this.boutonPret.Click += new System.EventHandler(this.boutonPret_Click);
             // 
             // labelTransition
@@ -106,9 +112,9 @@
             this.labelTransition.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.labelTransition.BackColor = System.Drawing.Color.Transparent;
             this.labelTransition.Font = new System.Drawing.Font("Blacklisted", 26F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTransition.Location = new System.Drawing.Point(346, 168);
+            this.labelTransition.Location = new System.Drawing.Point(340, 197);
             this.labelTransition.Name = "labelTransition";
-            this.labelTransition.Size = new System.Drawing.Size(597, 404);
+            this.labelTransition.Size = new System.Drawing.Size(597, 150);
             this.labelTransition.TabIndex = 0;
             this.labelTransition.Text = "label1";
             this.labelTransition.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -117,8 +123,10 @@
             // 
             this.btnRecommencer.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btnRecommencer.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.btnRecommencer.FlatAppearance.BorderColor = System.Drawing.Color.Gold;
             this.btnRecommencer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRecommencer.Font = new System.Drawing.Font("Orbitron", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRecommencer.ForeColor = System.Drawing.Color.Gold;
             this.btnRecommencer.Location = new System.Drawing.Point(167, 932);
             this.btnRecommencer.Name = "btnRecommencer";
             this.btnRecommencer.Size = new System.Drawing.Size(316, 77);
@@ -131,8 +139,10 @@
             // 
             this.btnSauvegarder.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btnSauvegarder.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.btnSauvegarder.FlatAppearance.BorderColor = System.Drawing.Color.Gold;
             this.btnSauvegarder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSauvegarder.Font = new System.Drawing.Font("Orbitron", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSauvegarder.ForeColor = System.Drawing.Color.Gold;
             this.btnSauvegarder.Location = new System.Drawing.Point(651, 932);
             this.btnSauvegarder.Name = "btnSauvegarder";
             this.btnSauvegarder.Size = new System.Drawing.Size(316, 77);
@@ -144,12 +154,27 @@
             // listBoxPieces
             // 
             this.listBoxPieces.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.listBoxPieces.BackColor = System.Drawing.Color.Black;
+            this.listBoxPieces.ForeColor = System.Drawing.SystemColors.Window;
             this.listBoxPieces.FormattingEnabled = true;
             this.listBoxPieces.ItemHeight = 20;
             this.listBoxPieces.Location = new System.Drawing.Point(973, 105);
             this.listBoxPieces.Name = "listBoxPieces";
             this.listBoxPieces.Size = new System.Drawing.Size(273, 804);
             this.listBoxPieces.TabIndex = 5;
+            // 
+            // label1
+            // 
+            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.LightGray;
+            this.label1.Location = new System.Drawing.Point(12, 105);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(314, 756);
+            this.label1.TabIndex = 6;
+            this.label1.Text = resources.GetString("label1.Text");
             // 
             // FenetreJeu
             // 
@@ -165,6 +190,7 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.btnRecommencer);
             this.Controls.Add(this.btnSauvegarder);
+            this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimizeBox = false;
@@ -175,6 +201,7 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FenetreJeu_FormClosed);
             this.panelTransition.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -188,5 +215,6 @@
         private System.Windows.Forms.Button btnRecommencer;
         private System.Windows.Forms.Button btnSauvegarder;
         private System.Windows.Forms.ListBox listBoxPieces;
+        private System.Windows.Forms.Label label1;
     }
 }

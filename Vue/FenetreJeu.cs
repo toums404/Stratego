@@ -234,29 +234,57 @@ namespace Stratego_TT_25_26.Vue
 
                     if (p == null)
                     {
-                        button.BackColor = Color.LightGray;
+                        button.BackColor = Color.FromArgb(60, 60, 60);
                         button.Text = "";
+                        button.BackgroundImage = null;
                     }
                     else
                     {
-                        if (p.EquipePiece == Equipe.Rouge)
-                        {
-                            button.BackColor = Color.Tomato;
-                        }
-                        else
-                        {
-                            button.BackColor = Color.CornflowerBlue;
-                        }
-                        if(p.EquipePiece == jeu.JoueurCourant || p.EstDecouverte)
-                        {
-                            button.Text = p.GradePiece.ToString();
-                        }
-                        else
-                        {
-                            button.Text = "?";
-                        }
+                        button.BackgroundImageLayout = ImageLayout.Zoom;
                         button.Font = new Font("Segoe UI", 7, FontStyle.Bold);
                         button.ForeColor = Color.White;
+
+                        if (p.EquipePiece == jeu.JoueurCourant || p.EstDecouverte)
+                        {
+                            if (p.EquipePiece == Equipe.Rouge)
+                                button.BackColor = ColorTranslator.FromHtml("#D0021B");
+                            else
+                                button.BackColor = ColorTranslator.FromHtml("#4A90E2");
+
+                            if (p.GradePiece == Grade.Bombe)
+                            {
+                                button.Text = ""; 
+                                if (p.EquipePiece == Equipe.Rouge)
+                                    button.BackgroundImage = Properties.Resources.bombe_rouge;
+                                else
+                                    button.BackgroundImage = Properties.Resources.bombe_bleue;
+                            }
+                            else if (p.GradePiece == Grade.Drapeau)
+                            {
+                                button.Text = "";
+                                if (p.EquipePiece == Equipe.Rouge)
+                                    button.BackgroundImage = Properties.Resources.drapeau_rouge;
+                                else
+                                    button.BackgroundImage = Properties.Resources.drapeau_bleu;
+                            }
+                            else
+                            {
+                                button.Text = p.GradePiece.ToString();
+                                button.BackgroundImage = null;
+                            }
+                        }
+                        else
+                        {
+                            button.Text = "";
+                            if (p.EquipePiece == Equipe.Rouge)
+                            {
+                                button.BackgroundImage = Properties.Resources.dos_rouge;
+                            }
+                            else
+                            {
+                                button.BackgroundImage = Properties.Resources.dos_bleu;
+                            }
+                        }
                     }
                 }
             }
